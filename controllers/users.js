@@ -5,9 +5,9 @@ export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
     const user = await User.findById(id);
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    return res.status(404).json({ message: err.message });
   }
 };
 
@@ -24,9 +24,9 @@ export const getUserFriends = async (req, res) => {
         return { _id, firstName, lastName, occupation, location, picturePath };
       }
     );
-    res.status(200).json(formattedFriends);
+    return res.status(200).json(formattedFriends);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    return res.status(404).json({ message: err.message });
   }
 };
 
@@ -55,11 +55,9 @@ export const addRemoveFriend = async (req, res) => {
         return { _id, firstName, lastName, occupation, location, picturePath };
       }
     );
-    res.status(200).json(formattedFriends);
-    return;
+    return res.status(200).json(formattedFriends);
   } catch (err) {
     console.log(err);
-    res.status(404).json({ message: err.message });
-    return;
+    return res.status(404).json({ message: err.message });
   }
 };

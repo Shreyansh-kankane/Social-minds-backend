@@ -19,7 +19,7 @@ export const createPost = async (req, res) => {
     });
     await newPost.save();
 
-    const post = await Post.find();
+    const post = await Post.find().sort({ $natural: -1 });
     res.status(201).json(post);
   } catch (err) {
     res.status(409).json({ message: err.message });
@@ -71,3 +71,24 @@ export const likePost = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+//delete
+export const deletePost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const post = await Post.find({ postId });
+    if(!post){
+      return res.status(401).json("post doesnot exist");      
+    }
+    if(post.userId !== req.user.id){
+      return res.status(401).json("invalid user");      
+    }
+    const deletedPost = await Post.findByIdAndDelete(postId);
+    res.status(200).json(deletedPost);
+    return;
+
+  }catch(error){
+    res.status(500).json({err:"some internal server error"});
+    return;
+  }
+}
