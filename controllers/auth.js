@@ -8,6 +8,13 @@ dotenv.config();
 /* REGISTER USER */
 export const register = async (req, res) => {
   try {
+
+    const user = await User.findOne({ email: email });
+    if(user){
+      res.status(409).json({err:"user already exist"});
+      return;
+    }
+
     const {
       firstName,
       lastName,
