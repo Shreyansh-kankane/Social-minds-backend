@@ -19,8 +19,6 @@ export const register = async (req, res) => {
       occupation,
     } = req.body;
 
-    // const salt = await bcrypt.genSalt();
-    // const passwordHash = await bcrypt.hash(password, salt);
     const salt = await bcrypt.genSalt(10);
     const secPass = await bcrypt.hash(req.body.password,salt);
 
@@ -36,15 +34,6 @@ export const register = async (req, res) => {
       viewedProfile: Math.floor(Math.random() * 10000),
       impressions: Math.floor(Math.random() * 10000),
     });
-    // const data={
-    //   user:{
-    //     id:user.id
-    //   }
-    // }
-
-    // const authToken=jwt.sign(data,process.env.JWT_SECRET);
-    // success=true;
-    // res.json({Success:success,authToken});
 
     const savedUser = await newUser.save();
     res.status(201).json(savedUser);
