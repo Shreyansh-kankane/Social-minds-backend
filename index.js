@@ -36,7 +36,7 @@ const storageEngine = multer.diskStorage({
     cb(null, "public/assets");
   },
   filename: function (req, file, cb) {
-    cb(null, `${Date.now()}--${file.originalname}`);
+    cb(null, `${file.originalname}`);
   },
 });
 
@@ -56,8 +56,8 @@ const checkFileType = function (file, cb) {
   }
 };
 
-const upload = multer({ 
-  storage:storageEngine,
+const upload = multer({
+  storage: storageEngine,
   limits: { fileSize: 1000000 },
   fileFilter: (req, file, cb) => {
     checkFileType(file, cb);
