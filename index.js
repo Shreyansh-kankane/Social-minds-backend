@@ -31,15 +31,38 @@ app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 /* FILE STORAGE */
-const storage = multer.diskStorage({
+const storageEngine = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/assets");
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, `${Date.now()}--${file.originalname}`);
   },
 });
-const upload = multer({ storage });
+
+const checkFileType = function (file, cb) {
+  //Allowed file extensions
+  const fileTypes = /jpeg|jpg|png|gif|svg|JPG/;
+
+  //check extension names
+  const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
+
+  const mimeType = fileTypes.test(file.mimetype);
+
+  if (mimeType && extName) {
+    return cb(null, true);
+  } else {
+    cb("Error: You can Only Upload Images!!");
+  }
+};
+
+const upload = multer({ 
+  storage:storageEngine,
+  limits: { fileSize: 1000000 },
+  fileFilter: (req, file, cb) => {
+    checkFileType(file, cb);
+  },
+});
 
 /* ROUTES WITH FILES */
 app.post("/auth/register", upload.single("picture"), register);
