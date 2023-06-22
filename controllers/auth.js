@@ -9,12 +9,6 @@ dotenv.config();
 export const register = async (req, res) => {
   try {
 
-    const user = await User.findOne({ email: email });
-    if(user){
-      res.status(409).json({err:"user already exist"});
-      return;
-    }
-
     const {
       firstName,
       lastName,
@@ -26,6 +20,11 @@ export const register = async (req, res) => {
       occupation,
     } = req.body;
 
+    const user = await User.findOne({ email: email });
+    if(user){
+      res.status(409).json({err:"user already exist"});
+      return;
+    }
     const salt = await bcrypt.genSalt(10);
     const secPass = await bcrypt.hash(req.body.password,salt);
 
