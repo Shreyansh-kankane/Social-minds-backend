@@ -77,18 +77,19 @@ export const deletePost = async (req, res) => {
   try {
     const { postId } = req.params;
     const post = await Post.find({ postId });
-    if(!post){
-      return res.status(401).json("post doesnot exist");      
+    if (!post) {
+      return res.status(401).json("post doesnot exist");
     }
-    if(post.userId !== req.user.id){
-      return res.status(401).json("invalid user");      
+    const postUserId = req.body.userId;
+    if (postUserId !== req.user.id) {
+      return res.status(401).json("invalid user");
     }
     const deletedPost = await Post.findByIdAndDelete(postId);
     res.status(200).json(deletedPost);
     return;
 
-  }catch(error){
-    res.status(500).json({err:"some internal server error"});
+  } catch (error) {
+    res.status(500).json({ err: "some internal server error" });
     return;
   }
 }
