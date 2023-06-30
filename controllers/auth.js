@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 /* REGISTER USER */
-export const register = async (req, res) => {
+export const register = async (req, res, picturePath) => {
   try {
 
     const {
@@ -14,7 +14,6 @@ export const register = async (req, res) => {
       lastName,
       email,
       password,
-      picturePath,
       friends,
       location,
       occupation,
@@ -43,6 +42,7 @@ export const register = async (req, res) => {
 
     const savedUser = await newUser.save();
     res.status(201).json(savedUser);
+    // console.log(savedUser);
     return;
 
   }  catch(error){
