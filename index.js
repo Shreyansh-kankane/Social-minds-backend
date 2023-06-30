@@ -69,15 +69,15 @@ const checkFileType = function (file, cb) {
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 1000000 },
-  // fileFilter: (req, file, cb) => {
-  //   checkFileType(file, cb);
-  // },
+  limits: { fileSize: 5000000 },
+  fileFilter: (req, file, cb) => {
+    checkFileType(file, cb);
+  },
 });
 
 /* ROUTES WITH FILES */
-app.post("/auth/register", upload.single("picture"), 
-  async(req,res)=>{
+app.post("/auth/register", upload.single("picture"),
+  async (req, res) => {
     try {
       const storageRef = ref(storage, `files/${req.file.originalname}`);
       // Create file metadata including the content type
@@ -101,7 +101,7 @@ app.post("/auth/register", upload.single("picture"),
   }
 );
 
-app.post("/posts", verifyToken, upload.single("picture"), 
+app.post("/posts", verifyToken, upload.single("picture"),
   async (req, res) => {
     try {
       const storageRef = ref(storage, `posts/${req.file.originalname}`);
@@ -125,6 +125,15 @@ app.post("/posts", verifyToken, upload.single("picture"),
     }
   }
 );
+
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ error: 'File size exceeds the allowed limit 5Mb' });
+    }
+  }
+  next(err);
+});
 
 /* ROUTES */
 app.use("/auth", authRoutes);
