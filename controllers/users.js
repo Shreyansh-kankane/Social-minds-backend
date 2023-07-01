@@ -10,6 +10,14 @@ export const getUser = async (req, res) => {
     return res.status(404).json({ message: err.message });
   }
 };
+export const getPeoples = async (req, res) => {
+  try {
+    const user = await User.find();
+    return res.status(200).json(user);
+  } catch (err) {
+    return res.status(404).json({ message: err.message });
+  }
+};
 
 export const getUserFriends = async (req, res) => {
   try {
